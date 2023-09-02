@@ -27,9 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       email: {
         type: DataTypes.STRING,
         validate: {
-          notNull: {
-            msg: "Can't be null",
-          },
+          notNull: false,
           isEmail: {
             msg: 'Invalid Email',
           },
@@ -38,17 +36,13 @@ module.exports = (sequelize, DataTypes) => {
       username: {
         type: DataTypes.STRING,
         validate: {
-          notNull: {
-            msg: "Can't be null",
-          },
+          notNull: false,
         },
       },
       password: {
         type: DataTypes.STRING,
         validate: {
-          notNull: {
-            msg: "Can't be null",
-          },
+          notNull: false,
         },
       },
       image_url: DataTypes.STRING,
@@ -66,8 +60,6 @@ module.exports = (sequelize, DataTypes) => {
           user.password = hashPassword;
         },
       },
-    },
-    {
       sequelize,
       modelName: 'User',
     }

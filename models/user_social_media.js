@@ -1,6 +1,6 @@
 'use strict';
 const { Model } = require('sequelize');
-const { Social_Media } = require('./index');
+const Social_Media = require('./social_media');
 module.exports = (sequelize, DataTypes) => {
   class User_Social_Media extends Model {
     /**

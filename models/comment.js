@@ -1,6 +1,7 @@
 'use strict';
 const { Model } = require('sequelize');
-const { User, Post } = require('./');
+const User = require('./user');
+const Post = require('./post');
 module.exports = (sequelize, DataTypes) => {
   class Comment extends Model {
     static associate(models) {
@@ -17,9 +18,7 @@ module.exports = (sequelize, DataTypes) => {
           key: 'id',
         },
         validate: {
-          notNull: {
-            msg: "Can't be null",
-          },
+          notNull: false,
         },
       },
       post_id: {
@@ -29,17 +28,13 @@ module.exports = (sequelize, DataTypes) => {
           key: 'id',
         },
         validate: {
-          notNull: {
-            msg: "Can't be null",
-          },
+          notNull: false,
         },
       },
       comment: {
         type: DataTypes.STRING,
         validate: {
-          notNull: {
-            msg: "Can't be null",
-          },
+          notNull: false,
         },
       },
     },

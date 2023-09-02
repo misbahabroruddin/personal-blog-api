@@ -1,7 +1,9 @@
 'use strict';
 const { Model } = require('sequelize');
+const Post = require('./post');
+const Tag = require('./tag');
+
 module.exports = (sequelize, DataTypes) => {
-  const { Post, Tag } = require('./');
   class Post_Tag extends Model {
     static associate(models) {
       Post_Tag.belongsTo(models.Post, { foreignKey: 'post_id' });
