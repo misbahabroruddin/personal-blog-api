@@ -14,7 +14,7 @@ class AuthController {
 
       if (foundUser) throw { name: 'dataExist' };
 
-      const user = await User.create({
+      await User.create({
         first_name,
         last_name,
         email,
