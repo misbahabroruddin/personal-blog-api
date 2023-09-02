@@ -3,14 +3,9 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Post_Tags', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER,
-      },
       post_id: {
         allowNull: false,
+        primaryKey: true,
         references: {
           model: 'Posts',
           key: 'id',
@@ -21,6 +16,7 @@ module.exports = {
       },
       tag_id: {
         allowNull: false,
+        primaryKey: true,
         references: {
           model: 'Tags',
           key: 'id',

@@ -12,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      User.hasMany(models.Comment, { foreignKey: 'user_id' });
       User.hasMany(models.Post, { foreignKey: 'author_id' });
       User.belongsToMany(models.Social_Media, {
         through: models.User_Social_Media,

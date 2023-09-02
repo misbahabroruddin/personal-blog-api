@@ -4,14 +4,16 @@ const User = require('./user');
 module.exports = (sequelize, DataTypes) => {
   class Post extends Model {
     static associate(models) {
-      Post.belongsTo(models.User, { foreignKey: 'author_id' });
+      Post.belongsTo(models.User, { as: 'author', foreignKey: 'author_id' });
       Post.belongsToMany(models.Tag, {
+        as: 'tags',
         through: models.Post_Tag,
         foreignKey: 'post_id',
       });
       Post.hasMany(models.Post_Tag, {
         foreignKey: 'post_id',
       });
+
       // Post.belongsToMany(models.Category, {
       //   through: models.Post_Category,
       //   foreignKey: 'post_id',
@@ -19,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       // Post.hasMany(models.Post_Category, {
       //   foreignKey: 'post_id',
       // });
-      Post.hasMany(models.Comment, { foreignKey: 'post_id' });
+      Post.hasMany(models.Comment, { as: 'comments', foreignKey: 'post_id' });
     }
   }
   Post.init(
@@ -40,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
           notNull: false,
         },
       },
-      content: {
+      category: {
         type: DataTypes.ENUM(
           'technology',
           'lifestyle',
