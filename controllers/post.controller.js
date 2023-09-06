@@ -32,41 +32,6 @@ class PostController {
 
       const post = await Post.create(postData);
 
-      // console.log(tags.length, '<<<');
-      // for (let i = 0; i < tags.length; i++) {
-      //   const tag = tags[i];
-      //   console.log(tag, 'TAG');
-
-      //   const foundTag = await Tag.findOne({
-      //     where: { name: tag.name },
-      //   });
-
-      //   if (foundTag) {
-      //     await Post_Tag.create(
-      //       {
-      //         post_id: post.id,
-      //         tag_id: foundTag.id,
-      //       },
-      //       { transaction: t }
-      //     );
-      //   } else {
-      //     const createTag = await Tag.create(
-      //       {
-      //         name: tag.name,
-      //       },
-      //       { transaction: t }
-      //     );
-
-      //     await Post_Tag.create(
-      //       {
-      //         post_id: post.id,
-      //         tag_id: createTag.id,
-      //       },
-      //       { transaction: t }
-      //     );
-      //   }
-      // }
-
       res.status(201).json({
         success: true,
         message: 'Successfully create post',
@@ -163,33 +128,30 @@ class PostController {
   static async update(req, res, next) {
     try {
       const { id } = req.params;
-      const { title, content, category, tags } = req.body;
+      const { title, content, category } = req.body;
       let updatedPost = {
         title,
         content,
         category,
-        tags,
       };
 
-      await sequelize.transaction(async (t) => {
-        const foundPost = await Post.findOne({
-          where: { id },
-        });
+      const foundPost = await Post.findOne({
+        where: { id },
+      });
 
-        if (!foundPost) throw { name: 'dataNotFound' };
+      if (!foundPost) throw { name: 'dataNotFound' };
 
-        if (!title || !content || !category || !tags) {
-          throw { name: 'badRequest' };
-        }
+      if (!title || !content || !category) {
+        throw { name: 'badRequest' };
+      }
 
-        await Post.update(updatedPost, {
-          where: { id },
-        });
+      await Post.update(updatedPost, {
+        where: { id },
+      });
 
-        res.status(200).json({
-          success: true,
-          message: 'Successfully update',
-        });
+      res.status(200).json({
+        success: true,
+        message: 'Successfully update',
       });
     } catch (error) {
       next(error);
