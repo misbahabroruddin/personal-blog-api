@@ -12,59 +12,70 @@ class PostController {
     try {
       const { id } = req.loggedUser;
       const { title, content, category, tags } = req.body;
-      await sequelize.transaction(async (t) => {
-        const post = await Post.create(
-          {
-            author_id: id,
-            title,
-            content,
-            category,
-          },
-          { transaction: t }
-        );
 
-        for (let i = 0; i < tags.length; i++) {
-          const tag = tags[i];
+      let postData = {
+        author_id: id,
+        title,
+        content,
+        category,
+        tags,
+      };
 
-          const foundTag = await Tag.findOne({
-            where: { name: tag.name },
-          });
+      if (req.file) {
+        const imagePath = `http://localhost:${process.env.PORT}/${req.file.path}`;
 
-          if (foundTag) {
-            await Post_Tag.create(
-              {
-                post_id: post.id,
-                tag_id: foundTag.id,
-              },
-              { transaction: t }
-            );
-          } else {
-            const createTag = await Tag.create(
-              {
-                name: tag.name,
-              },
-              { transaction: t }
-            );
+        postData = {
+          ...postData,
+          thumbnail_url: imagePath,
+        };
+      }
 
-            await Post_Tag.create(
-              {
-                post_id: post.id,
-                tag_id: createTag.id,
-              },
-              { transaction: t }
-            );
-          }
-        }
+      const post = await Post.create(postData);
 
-        res.status(201).json({
-          success: true,
-          message: 'Successfully create post',
-          data: {
-            title: post.title,
-            content: post.content,
-            category: post.category,
-          },
-        });
+      // console.log(tags.length, '<<<');
+      // for (let i = 0; i < tags.length; i++) {
+      //   const tag = tags[i];
+      //   console.log(tag, 'TAG');
+
+      //   const foundTag = await Tag.findOne({
+      //     where: { name: tag.name },
+      //   });
+
+      //   if (foundTag) {
+      //     await Post_Tag.create(
+      //       {
+      //         post_id: post.id,
+      //         tag_id: foundTag.id,
+      //       },
+      //       { transaction: t }
+      //     );
+      //   } else {
+      //     const createTag = await Tag.create(
+      //       {
+      //         name: tag.name,
+      //       },
+      //       { transaction: t }
+      //     );
+
+      //     await Post_Tag.create(
+      //       {
+      //         post_id: post.id,
+      //         tag_id: createTag.id,
+      //       },
+      //       { transaction: t }
+      //     );
+      //   }
+      // }
+
+      res.status(201).json({
+        success: true,
+        message: 'Successfully create post',
+        data: {
+          title: post.title,
+          thumbnail: post.thumbnail_url,
+          content: post.content,
+          category: post.category,
+        },
       });
     } catch (error) {
       next(error);
@@ -74,7 +85,14 @@ class PostController {
   static async getAll(req, res, next) {
     try {
       const post = await Post.findAll({
-        attributes: ['title', 'content', 'category'],
+        attributes: [
+          'id',
+          'title',
+          'content',
+          'category',
+          'thumbnail_url',
+          'createdAt',
+        ],
         include: [
           {
             model: User,
@@ -104,7 +122,13 @@ class PostController {
       const { id } = req.params;
       const post = await Post.findOne({
         where: { id },
-        attributes: ['title', 'content', 'category'],
+        attributes: [
+          'title',
+          'content',
+          'category',
+          'thumbnail_url',
+          'createdAt',
+        ],
         include: [
           {
             model: User,
@@ -119,7 +143,7 @@ class PostController {
           {
             model: Comment,
             as: 'comments',
-            attributes: ['name', 'comment', ['createdAt', 'time']],
+            attributes: ['id', 'name', 'comment', ['createdAt', 'time']],
           },
         ],
       });

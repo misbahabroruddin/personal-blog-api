@@ -19,6 +19,10 @@ module.exports = {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       },
+      thumbnail_url: {
+        // allowNull: false,
+        type: Sequelize.STRING,
+      },
       title: {
         allowNull: false,
         type: Sequelize.STRING,
