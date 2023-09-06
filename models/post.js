@@ -36,6 +36,9 @@ module.exports = (sequelize, DataTypes) => {
           notNull: false,
         },
       },
+      thumbnail_url: {
+        type: DataTypes.STRING,
+      },
       title: {
         type: DataTypes.STRING,
         validate: {

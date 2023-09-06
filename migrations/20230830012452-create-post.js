@@ -20,7 +20,6 @@ module.exports = {
         onUpdate: 'CASCADE',
       },
       thumbnail_url: {
-        // allowNull: false,
         type: Sequelize.STRING,
       },
       title: {
