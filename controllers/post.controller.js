@@ -48,7 +48,15 @@ class PostController {
   }
 
   static async getAll(req, res, next) {
+    const { page, limit } = req.query;
+
     try {
+      const DEFAULT_PAGE = 1;
+      const DEFAULT_LIMIT = 10;
+      const curretPage = parseInt(page) || DEFAULT_PAGE;
+      const dataPerPage = parseInt(limit) || DEFAULT_LIMIT;
+      const offset = (curretPage - 1) * dataPerPage;
+
       const post = await Post.findAll({
         attributes: [
           'id',
@@ -70,11 +78,22 @@ class PostController {
             attributes: ['name'],
           },
         ],
+        limit: dataPerPage,
+        offset,
       });
+
+      const countPost = await Post.count();
+
+      const totalPages = Math.ceil(countPost / dataPerPage);
 
       res.status(200).json({
         success: true,
         message: 'Successfully retrivied data',
+        metadata: {
+          page: curretPage,
+          dataPerPage,
+          totalPages,
+        },
         data: post,
       });
     } catch (error) {
