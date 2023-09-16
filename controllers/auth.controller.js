@@ -46,7 +46,7 @@ class AuthController {
 
       const token = JWT.generateToken(foundUser);
 
-      res.status(200).json({
+      res.cookie('token', token, { httpOnly: true }).status(200).json({
         success: true,
         message: 'Login Success',
         token,
