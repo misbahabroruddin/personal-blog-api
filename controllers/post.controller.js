@@ -80,6 +80,7 @@ class PostController {
         ],
         limit: dataPerPage,
         offset,
+        order: [['createdAt', 'DESC']],
       });
 
       const countPost = await Post.count();
@@ -107,6 +108,7 @@ class PostController {
       const post = await Post.findOne({
         where: { id },
         attributes: [
+          'id',
           'title',
           'content',
           'category',
@@ -154,18 +156,25 @@ class PostController {
         category,
       };
 
-      const foundPost = await Post.findOne({
-        where: { id },
-      });
+      const foundPost = await Post.findByPk(id);
 
       if (!foundPost) throw { name: 'dataNotFound' };
+
+      if (req.file) {
+        const imagePath = `http://localhost:${process.env.PORT}/${req.file.path}`;
+
+        updatedPost = {
+          ...updatedPost,
+          thumbnail_url: imagePath,
+        };
+      }
 
       if (!title || !content || !category) {
         throw { name: 'badRequest' };
       }
 
       await Post.update(updatedPost, {
-        where: { id },
+        where: { id: foundPost.id },
       });
 
       res.status(200).json({
