@@ -197,7 +197,7 @@ class PostController {
       if (!foundPost) throw { name: 'dataNotFound' };
 
       await Post.destroy({
-        where: { id },
+        where: { id: foundPost.id },
       });
 
       res.status(200).json({
